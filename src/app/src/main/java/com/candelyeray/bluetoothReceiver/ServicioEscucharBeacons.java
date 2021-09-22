@@ -13,6 +13,7 @@ public class ServicioEscucharBeacons extends IntentService {
 
     private boolean seguir = true;
 
+    private MainActivity mainActivity = new MainActivity();
 
     public ServicioEscucharBeacons() {
         super("HelloIntentService");
@@ -49,7 +50,7 @@ public class ServicioEscucharBeacons extends IntentService {
         if ( this.seguir == false ) {
             return;
         }
-
+        mainActivity.detenerBusquedaDispositivosBTLE();
         this.seguir = false;
         this.stopSelf();
 
@@ -89,6 +90,7 @@ public class ServicioEscucharBeacons extends IntentService {
         try {
 
             while ( this.seguir ) {
+                mainActivity.buscarTodosLosDispositivosBTLE();
                 Thread.sleep(tiempoDeEspera);
                 Log.d(ETIQUETA_LOG, " ServicioEscucharBeacons.onHandleIntent: tras la espera:  " + contador );
                 contador++;

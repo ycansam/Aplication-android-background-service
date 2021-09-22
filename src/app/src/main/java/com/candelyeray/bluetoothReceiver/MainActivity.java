@@ -17,6 +17,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,10 +57,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Log.d(ETIQUETA_LOG, " MainActivity.constructor : voy a arrancar el servicio");
-
+        BluetoothAdapter.getDefaultAdapter().startLeScan( this.callbackLeScan );
         this.elIntentDelServicio = new Intent(this, ServicioEscucharBeacons.class);
 
         this.elIntentDelServicio.putExtra("tiempoDeEspera", (long) 5000);
+        
         startService( this.elIntentDelServicio );
 
     } // ()
@@ -78,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     // --------------------------------------------------------------
 
 
-    private void buscarTodosLosDispositivosBTLE() {
+    public void buscarTodosLosDispositivosBTLE() {
         this.callbackLeScan = new BluetoothAdapter.LeScanCallback() {
             @Override
             public void onLeScan(BluetoothDevice bluetoothDevice, int rssi, byte[] bytes) {
@@ -163,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
     } // ()
     // --------------------------------------------------------------
     // --------------------------------------------------------------
-    private void detenerBusquedaDispositivosBTLE() {
+    public void detenerBusquedaDispositivosBTLE() {
         if ( this.callbackLeScan == null ) {
             return;
         }
@@ -200,54 +210,68 @@ public class MainActivity extends AppCompatActivity {
 
     //-------------------------------------------------------------------------
     //-------------------------------------------------------------------------
-    public void boton_enviar_pulsado (View quien) {
+    public void boton_enviar_pulsado (View quien) throws JSONException {
         Log.d("clienterestandroid", "boton_enviar_pulsado");
         this.elTexto.setText("pulsado");
 
         // ojo: creo que hay que crear uno nuevo cada vez
         PeticionarioREST elPeticionario = new PeticionarioREST();
-
-		/*
-
-		   enviarPeticion( "hola", function (res) {
-		   		res
-		   })
-
-        elPeticionario.hacerPeticionREST("GET",  "http://158.42.144.126:8080/prueba", null,
-			(int codigo, String cuerpo) => { } );
-
-		   */
-
-        elPeticionario.hacerPeticionREST("GET",  "http://158.42.144.126:8080/prueba", null,
+        /*
+        elPeticionario.hacerPeticionREST("GET",  "http://81.202.37.9:3050/obtenerSensores", null,
                 new PeticionarioREST.RespuestaREST () {
                     @Override
                     public void callback(int codigo, String cuerpo) {
                         elTexto.setText ("codigo respuesta= " + codigo + " <-> \n" + cuerpo);
                     }
                 }
-        );
-
-        // (int codigo, String cuerpo) -> { elTexto.setText ("lo que sea"=; }
-
-        //String textoJSON = "{ 'dni': '" + elDni + "' }";
-       // "{ 'dni': '2023423434' }";
-        /*
+        );*/
 
 
-		/* otro ejemplo:
-		elPeticionario.hacerPeticionREST("POST", "http://192.168.1.113:8080/mensaje",
-				"{\"dni\": \"A9182342W\", \"nombre\": \"Android\", \"apellidos\": \"De Los Palotes\"}",
-				new PeticionarioREST.RespuestaREST () {
-					@Override
-					public void callback(int codigo, String cuerpo) {
-						elTexto.setText ("cdigo respuesta: " + codigo + " <-> \n" + cuerpo);
-					}
-		});
-		*/
 
-		/*
-        elPeticionario.hacerPeticionREST("GET",  "https://jsonplaceholder.typicode.com/posts/2", ...
-        */
+        // hacer peticionario post
+        String url = "http://81.202.37.9:3050/anyadirSensor";
+
+        // creo el objeto json
+        JSONObject postData = new JSONObject();
+        postData.put("id_sensor", "2344");
+        postData.put("nombre", "Nunca va");
+        postData.put("temperatura", "0");
+        postData.put("dioxido_carbono", "0");
+
+        // hago una peticion json a la url
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, url, postData, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        elTexto.setText("Response: " + response.toString());
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Volley Error", error.toString());
+                    }
+                });
+
+        Volley.newRequestQueue(this).add(jsonObjectRequest);
+
+        // -----------------------
+        //  NO FUNCIONA ESTE METODO PERO LO DEJO AQUI
+        /*JSONObject postData = new JSONObject();
+        try {
+            postData.put("id_sensor", "2344");
+            postData.put("nombre", "Nunca va");
+            postData.put("temperatura", "0");
+            postData.put("dioxido_carbono", "0");
+
+            // otro ejemplo:
+            elPeticionario.hacerPeticionREST("POST", "http://81.202.37.9:3050/anyadirSensor",
+                    postData.toString(),
+                    (codigo, cuerpo) -> elTexto.setText ("cdigo respuesta: " + codigo + " <-> \n" + cuerpo));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }*/
+
     } // pulsado ()
 
     @Override

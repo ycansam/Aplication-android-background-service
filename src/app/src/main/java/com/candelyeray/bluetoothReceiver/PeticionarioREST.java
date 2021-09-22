@@ -8,8 +8,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+
 import android.os.AsyncTask;
 import android.util.Log;
+
+import org.json.JSONObject;
 
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------
@@ -68,19 +72,24 @@ public class PeticionarioREST extends AsyncTask<Void, Void, Boolean> {
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestProperty( "Content-Type", "application/json; charset-utf-8" );
             connection.setRequestMethod(this.elMetodo);
-            // connection.setRequestProperty("Accept", "*/*);
+            connection.setRequestProperty("Accept","application/json");
+             //connection.setRequestProperty("Accept", cuerpoRespuesta);
 
-            // connection.setUseCaches(false);
+             //connection.setUseCaches(false);
+            connection.setDoOutput(true);
             connection.setDoInput(true);
 
             if ( ! this.elMetodo.equals("GET") && this.elCuerpo != null ) {
                 Log.d("clienterestandroid", "doInBackground(): no es get, pongo cuerpo");
+                Log.d("cuerpo", this.elCuerpo );
                 connection.setDoOutput(true);
                 // si no es GET, pongo el cuerpo que me den en la peticin
                 DataOutputStream dos = new DataOutputStream (connection.getOutputStream());
                 dos.writeBytes(this.elCuerpo);
                 dos.flush();
                 dos.close();
+                Log.i("STATUS", String.valueOf(connection.getResponseCode()));
+                Log.i("MSG" , connection.getResponseMessage());
             }
 
             // ya he enviado la peticin
