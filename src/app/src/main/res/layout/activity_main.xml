@@ -23,4 +23,24 @@
      android:layout_width="match_parent"
      android:layout_height="wrap_content"
      android:text="TextView" />
+ <TextView
+     android:id="@+id/id_sensor"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:text="Id Sensor" />
+ <TextView
+     android:id="@+id/nombre"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:text="nombre" />
+ <TextView
+     android:id="@+id/dioxido_carbono"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:text="Valor Dioxido" />
+ <TextView
+     android:id="@+id/temperatura"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:text="Valor Temperatura" />
 </android.widget.LinearLayout>

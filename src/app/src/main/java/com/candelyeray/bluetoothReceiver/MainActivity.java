@@ -26,6 +26,7 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
@@ -43,11 +44,17 @@ public class MainActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_BACKGROUND_LOCATION = 2;
 
     // PETICIONARIO REST -----
-    private TextView elTexto;
     private Button elBotonEnviar;
+    private TextView elTexto;
+    private TextView sensor_id;
+    private TextView nombre;
+    private TextView temperatura;
+    private TextView dioxido_carbono;
 
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
+    /**
+     * @function botonArrancarServicioPulsado
+     * Se encarga de arrancar el servicio de escuchar beacons en segundo plano.
+     */
     public void botonArrancarServicioPulsado( View v ) {
         Log.d(ETIQUETA_LOG, " boton arrancar servicio Pulsado" );
 
@@ -66,8 +73,10 @@ public class MainActivity extends AppCompatActivity {
 
     } // ()
 
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
+    /**
+     * @function botonDetenerServicioPulsado
+     * Se encarga de detener el servicio de escuchar beacons en segundo plano.
+     */
     public void botonDetenerServicioPulsado( View v ) {
 
         if ( this.elIntentDelServicio == null ) {
@@ -87,7 +96,9 @@ public class MainActivity extends AppCompatActivity {
     // FUNCIONES BTLE
     // --------------------------------------------------------------
 
-
+    /**
+     * Busca todos los dispositivos bluetooth activados que esten al alcance.
+     */
     public void buscarTodosLosDispositivosBTLE() {
         this.callbackLeScan = new BluetoothAdapter.LeScanCallback() {
             @Override
@@ -107,8 +118,13 @@ public class MainActivity extends AppCompatActivity {
         // Log.d(ETIQUETA_LOG, " buscarTodosLosDispositivosBTL(): startLeScan(), resultado= " + resultado );
     } // ()
 
-    // --------------------------------------------------------------
-    // --------------------------------------------------------------
+    /**
+     * Muestra la informacion del dispositivo bluetooth cuando se detecta.
+     *
+     * @param BluetoothDevice dispositivo
+     * @param rssi rssi del dispositivo
+     * @param byte[] array de bytes que contienen la informacion del sensor
+     */
     private void mostrarInformacionDispositivoBTLE( BluetoothDevice bluetoothDevice, int rssi, byte[] bytes) {
 
         Log.d(ETIQUETA_LOG, " ****************************************************");
@@ -140,9 +156,24 @@ public class MainActivity extends AppCompatActivity {
         Log.d(ETIQUETA_LOG, " txPower  = " + Integer.toHexString(tib.getTxPower()) + " ( " + tib.getTxPower() + " )");
         Log.d(ETIQUETA_LOG, " ****************************************************");
 
+
+        // text views to send information
+        if(bluetoothDevice.getName() != ""){
+            this.sensor_id.setText(bluetoothDevice.getAddress());
+            this.nombre.setText(bluetoothDevice.getName());
+
+            byte[] bytesValor = Arrays.copyOfRange(tib.getMajor(), 0, 8); // los 8 primeros bits del byte son el valor de dioxido
+            String valor = Utilidades.bytesToHexString(bytesValor); // obtiene la primera parte del byte que es donde esta el valor de dioxido de carbono
+            this.dioxido_carbono.setText(valor);
+            this.temperatura.setText(Utilidades.bytesToHexString(tib.getMajor()));
+        }
     } // ()
-    // --------------------------------------------------------------
-    // --------------------------------------------------------------
+
+    /**
+     * Busca un dispositivo bluetooth especifico
+     *
+     * @param UUID Identificador del dispositivo.
+     */
     private void buscarEsteDispositivoBTLE(final UUID dispositivoBuscado ) {
         this.callbackLeScan = new BluetoothAdapter.LeScanCallback() {
             @Override
@@ -156,8 +187,9 @@ public class MainActivity extends AppCompatActivity {
                 String uuidString =  Utilidades.bytesToString( tib.getUUID() );
 
                 if ( uuidString.compareTo( Utilidades.uuidToString( dispositivoBuscado ) ) == 0 )  {
-                    detenerBusquedaDispositivosBTLE();
+                    // detenerBusquedaDispositivosBTLE();
                     mostrarInformacionDispositivoBTLE( bluetoothDevice, rssi, bytes );
+
                 } else {
                     Log.d( MainActivity.ETIQUETA_LOG, " * UUID buscado >" +
                             Utilidades.uuidToString( dispositivoBuscado ) + "< no concuerda con este uuid = >" + uuidString + "<");
@@ -167,40 +199,42 @@ public class MainActivity extends AppCompatActivity {
         }; // new LeScanCallback
 
         //
-        //
-        //
         BluetoothAdapter.getDefaultAdapter().startLeScan( this.callbackLeScan );
     } // ()
-    // --------------------------------------------------------------
-    // --------------------------------------------------------------
+
+
+    /**
+     * Detiene la busqueda de dispositivos
+     */
     public void detenerBusquedaDispositivosBTLE() {
         if ( this.callbackLeScan == null ) {
             return;
         }
 
         //
-        //
-        //
         BluetoothAdapter.getDefaultAdapter().stopLeScan(this.callbackLeScan);
         this.callbackLeScan = null;
     } // ()
 
-    // --------------------------------------------------------------
-    // --------------------------------------------------------------
+    /**
+     * Boton que activa la busqueda de todos los dispositivos
+     */
     public void botonBuscarDispositivosBTLEPulsado( View v ) {
         Log.d(ETIQUETA_LOG, " boton buscar dispositivos BTLE Pulsado" );
         this.buscarTodosLosDispositivosBTLE();
     } // ()
 
-    // --------------------------------------------------------------
-    // --------------------------------------------------------------
+    /**
+     * Boton que activa la busqueda de nuestro dispositivo bluetooth
+     */
     public void botonBuscarNuestroDispositivoBTLEPulsado( View v ) {
         Log.d(ETIQUETA_LOG, " boton nuestro dispositivo BTLE Pulsado" );
-        this.buscarEsteDispositivoBTLE( Utilidades.stringToUUID( "EPSG-GTI-PROY-3A" ) );
+        this.buscarEsteDispositivoBTLE( Utilidades.stringToUUID( "EPSG-GTI-YERAY3A" ) );
     } // ()
 
-    // --------------------------------------------------------------
-    // --------------------------------------------------------------
+    /**
+     * Boton que desactiva la busqueda de dispositivos bluetooth
+     */
     public void botonDetenerBusquedaDispositivosBTLEPulsado( View v ) {
         Log.d(ETIQUETA_LOG, " boton nuestro dispositivo BTLE Pulsado" );
         this.detenerBusquedaDispositivosBTLE();
@@ -208,8 +242,9 @@ public class MainActivity extends AppCompatActivity {
 
     // Funciones Peticionario Rest
 
-    //-------------------------------------------------------------------------
-    //-------------------------------------------------------------------------
+    /**
+     * Boton que envia a una direccion web los datos recibidos de nuestro dispositivo bluetooth
+     */
     public void boton_enviar_pulsado (View quien) throws JSONException {
         Log.d("clienterestandroid", "boton_enviar_pulsado");
         this.elTexto.setText("pulsado");
@@ -253,7 +288,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         Volley.newRequestQueue(this).add(jsonObjectRequest);
-
         // -----------------------
         //  NO FUNCIONA ESTE METODO PERO LO DEJO AQUI
         /*JSONObject postData = new JSONObject();

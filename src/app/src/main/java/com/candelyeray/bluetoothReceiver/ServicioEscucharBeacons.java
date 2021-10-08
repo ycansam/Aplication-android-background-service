@@ -14,7 +14,9 @@ public class ServicioEscucharBeacons extends IntentService {
     private boolean seguir = true;
 
     private MainActivity mainActivity = new MainActivity();
-
+    /**
+     * Servicio que detecta los beacons que se estan recibiendo.
+     */
     public ServicioEscucharBeacons() {
         super("HelloIntentService");
         Log.d(ETIQUETA_LOG, " ServicioEscucharBeacons.constructor: termina");
@@ -40,8 +42,9 @@ public class ServicioEscucharBeacons extends IntentService {
 
      */
 
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
+    /**
+     * Detiene el servicio de escuchar beacons.
+     */
     public void parar () {
 
         Log.d(ETIQUETA_LOG, " ServicioEscucharBeacons.parar() " );
@@ -74,6 +77,9 @@ public class ServicioEscucharBeacons extends IntentService {
      * The IntentService calls this method from the default worker thread with
      * the intent that started the service. When this method returns, IntentService
      * stops the service, as appropriate.
+     *
+     * Mientras el servicio este activado cada 10 segundos hara una escucha de los beacons que se
+     * esten recibiendo
      */
     @Override
     protected void onHandleIntent(Intent intent) {
@@ -90,7 +96,7 @@ public class ServicioEscucharBeacons extends IntentService {
         try {
 
             while ( this.seguir ) {
-                mainActivity.buscarTodosLosDispositivosBTLE();
+                //mainActivity.buscarTodosLosDispositivosBTLE();
                 Thread.sleep(tiempoDeEspera);
                 Log.d(ETIQUETA_LOG, " ServicioEscucharBeacons.onHandleIntent: tras la espera:  " + contador );
                 contador++;
