@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView elTexto;
     private TextView sensor_id;
     private TextView nombre;
-    private TextView temperatura;
     private TextView dioxido_carbono;
 
     /**
@@ -158,15 +157,15 @@ public class MainActivity extends AppCompatActivity {
 
 
         // text views to send information
-        if(bluetoothDevice.getName() != ""){
+        /*if(bluetoothDevice.getName() != ""){
             this.sensor_id.setText(bluetoothDevice.getAddress());
             this.nombre.setText(bluetoothDevice.getName());
 
             byte[] bytesValor = Arrays.copyOfRange(tib.getMajor(), 0, 8); // los 8 primeros bits del byte son el valor de dioxido
             String valor = Utilidades.bytesToHexString(bytesValor); // obtiene la primera parte del byte que es donde esta el valor de dioxido de carbono
             this.dioxido_carbono.setText(valor);
-            this.temperatura.setText(Utilidades.bytesToHexString(tib.getMajor()));
         }
+        */
     } // ()
 
     /**
@@ -252,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
         // ojo: creo que hay que crear uno nuevo cada vez
         PeticionarioREST elPeticionario = new PeticionarioREST();
         /*
-        elPeticionario.hacerPeticionREST("GET",  "http://81.202.37.9:3050/obtenerSensores", null,
+        elPeticionario.hacerPeticionREST("GET",  "http://81.202.37.9:3050/obtenerTodasMediciones", null,
                 new PeticionarioREST.RespuestaREST () {
                     @Override
                     public void callback(int codigo, String cuerpo) {
@@ -261,17 +260,14 @@ public class MainActivity extends AppCompatActivity {
                 }
         );*/
 
-
-
         // hacer peticionario post
-        String url = "http://81.202.37.9:3050/anyadirSensor";
+        String url = "http://81.202.37.9:3050/anyadirMedicion";
 
         // creo el objeto json
         JSONObject postData = new JSONObject();
-        postData.put("id_sensor", "2344");
-        postData.put("nombre", "Nunca va");
-        postData.put("temperatura", "0");
-        postData.put("dioxido_carbono", "0");
+        postData.put("id_sensor", "94");
+        postData.put("nombre", "Test Prueba");
+        postData.put("dioxido_carbono", "25");
 
         // hago una peticion json a la url
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -288,23 +284,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         Volley.newRequestQueue(this).add(jsonObjectRequest);
-        // -----------------------
-        //  NO FUNCIONA ESTE METODO PERO LO DEJO AQUI
-        /*JSONObject postData = new JSONObject();
-        try {
-            postData.put("id_sensor", "2344");
-            postData.put("nombre", "Nunca va");
-            postData.put("temperatura", "0");
-            postData.put("dioxido_carbono", "0");
-
-            // otro ejemplo:
-            elPeticionario.hacerPeticionREST("POST", "http://81.202.37.9:3050/anyadirSensor",
-                    postData.toString(),
-                    (codigo, cuerpo) -> elTexto.setText ("cdigo respuesta: " + codigo + " <-> \n" + cuerpo));
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }*/
 
     } // pulsado ()
 
