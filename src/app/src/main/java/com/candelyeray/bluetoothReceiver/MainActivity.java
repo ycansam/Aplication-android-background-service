@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -28,11 +29,14 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 import java.util.UUID;
-
+// --------------------------------------------------------------
+//
+// Yeray Candel Sampedro
+// 2021 - 10 - 18
+//
+// --------------------------------------------------------------
 public class MainActivity extends AppCompatActivity {
 
-    // ---------------------------------------------------------------------------------------------
-    // ---------------------------------------------------------------------------------------------
     private static final String ETIQUETA_LOG = ">>>>";
 
     // SERVICIOS -------------
@@ -49,6 +53,10 @@ public class MainActivity extends AppCompatActivity {
     private TextView sensor_id;
     private TextView nombre;
     private TextView dioxido_carbono;
+
+    private int valor;
+    private String major;
+    private int valorMajor;
 
     /**
      * @function botonArrancarServicioPulsado
@@ -155,7 +163,11 @@ public class MainActivity extends AppCompatActivity {
         Log.d(ETIQUETA_LOG, " txPower  = " + Integer.toHexString(tib.getTxPower()) + " ( " + tib.getTxPower() + " )");
         Log.d(ETIQUETA_LOG, " ****************************************************");
 
-
+        if(tib.getMinor() != null ){
+            this.valor = Utilidades.bytesToInt(tib.getMinor());
+            this.major = Utilidades.bytesToHexString(tib.getMajor());
+            this.valorMajor = Integer.parseInt(this.major.substring(0, 2), 16);
+        }
         // text views to send information
         /*if(bluetoothDevice.getName() != ""){
             this.sensor_id.setText(bluetoothDevice.getAddress());
@@ -186,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                 String uuidString =  Utilidades.bytesToString( tib.getUUID() );
 
                 if ( uuidString.compareTo( Utilidades.uuidToString( dispositivoBuscado ) ) == 0 )  {
-                    // detenerBusquedaDispositivosBTLE();
+                    detenerBusquedaDispositivosBTLE();
                     mostrarInformacionDispositivoBTLE( bluetoothDevice, rssi, bytes );
 
                 } else {
@@ -261,13 +273,13 @@ public class MainActivity extends AppCompatActivity {
         );*/
 
         // hacer peticionario post
-        String url = "http://81.202.37.9:3050/anyadirMedicion";
+        String url = "http://172.20.10.2:3050/anyadirMedicion";
 
         // creo el objeto json
         JSONObject postData = new JSONObject();
         postData.put("id_sensor", "94");
         postData.put("nombre", "Test Prueba");
-        postData.put("dioxido_carbono", "25");
+        postData.put("dioxido_carbono", valorMajor);
 
         // hago una peticion json a la url
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -298,7 +310,9 @@ public class MainActivity extends AppCompatActivity {
         // Servicio Rest
         this.elTexto = (TextView) findViewById(R.id.elTexto);
         this.elBotonEnviar = (Button) findViewById(R.id.botonEnviar);
-
+        StrictMode.ThreadPolicy policy = new
+                StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         Log.d("clienterestandroid", "fin onCreate()");
 

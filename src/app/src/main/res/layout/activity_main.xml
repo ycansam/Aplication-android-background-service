@@ -38,9 +38,4 @@
      android:layout_width="match_parent"
      android:layout_height="wrap_content"
      android:text="Valor Dioxido" />
- <TextView
-     android:id="@+id/temperatura"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:text="Valor Temperatura" />
 </android.widget.LinearLayout>

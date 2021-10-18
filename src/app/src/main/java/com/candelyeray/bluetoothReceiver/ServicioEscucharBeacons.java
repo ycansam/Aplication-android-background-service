@@ -3,7 +3,12 @@ package com.candelyeray.bluetoothReceiver;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
-
+// --------------------------------------------------------------
+//
+// Yeray Candel Sampedro
+// 2021 - 10 - 18
+//
+// --------------------------------------------------------------
 public class ServicioEscucharBeacons extends IntentService {
     // ---------------------------------------------------------------------------------------------
     // ---------------------------------------------------------------------------------------------
