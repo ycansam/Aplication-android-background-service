@@ -51,12 +51,8 @@ public class MainActivity extends AppCompatActivity {
     private Button elBotonEnviar;
     private TextView elTexto;
     private TextView sensor_id;
-    private TextView nombre;
+    private TextView nombreSensor;
     private TextView dioxido_carbono;
-
-    private int valor;
-    private String major;
-    private int valorMajor;
 
     /**
      * @function botonArrancarServicioPulsado
@@ -164,20 +160,15 @@ public class MainActivity extends AppCompatActivity {
         Log.d(ETIQUETA_LOG, " ****************************************************");
 
         if(tib.getMinor() != null ){
-            this.valor = Utilidades.bytesToInt(tib.getMinor());
-            this.major = Utilidades.bytesToHexString(tib.getMajor());
-            this.valorMajor = Integer.parseInt(this.major.substring(0, 2), 16);
-        }
-        // text views to send information
-        /*if(bluetoothDevice.getName() != ""){
-            this.sensor_id.setText(bluetoothDevice.getAddress());
-            this.nombre.setText(bluetoothDevice.getName());
+            String major;
+            major = Utilidades.bytesToHexString(tib.getMajor());
+            int valorMajor = Integer.parseInt(major.substring(0, 2), 16);
 
-            byte[] bytesValor = Arrays.copyOfRange(tib.getMajor(), 0, 8); // los 8 primeros bits del byte son el valor de dioxido
-            String valor = Utilidades.bytesToHexString(bytesValor); // obtiene la primera parte del byte que es donde esta el valor de dioxido de carbono
-            this.dioxido_carbono.setText(valor);
+            this.nombreSensor.setText( bluetoothDevice.getName());
+            this.sensor_id.setText(bluetoothDevice.getAddress());
+            this.dioxido_carbono.setText(String.valueOf(valorMajor) );
         }
-        */
+
     } // ()
 
     /**
@@ -258,7 +249,6 @@ public class MainActivity extends AppCompatActivity {
      */
     public void boton_enviar_pulsado (View quien) throws JSONException {
         Log.d("clienterestandroid", "boton_enviar_pulsado");
-        this.elTexto.setText("pulsado");
 
         // ojo: creo que hay que crear uno nuevo cada vez
         PeticionarioREST elPeticionario = new PeticionarioREST();
@@ -273,13 +263,15 @@ public class MainActivity extends AppCompatActivity {
         );*/
 
         // hacer peticionario post
-        String url = "http://172.20.10.2:3050/anyadirMedicion";
+        //String url = "http://172.20.10.2:3050/anyadirMedicion";
+        String url = "http://81.202.37.9:3050/anyadirMedicion";
 
         // creo el objeto json
         JSONObject postData = new JSONObject();
-        postData.put("id_sensor", "94");
-        postData.put("nombre", "Test Prueba");
-        postData.put("dioxido_carbono", valorMajor);
+        postData.put("direccion_sensor", this.sensor_id.getText());
+        postData.put("nombre", this.nombreSensor.getText());
+        postData.put("dioxido_carbono", String.valueOf( this.dioxido_carbono.getText()) );
+
 
         // hago una peticion json a la url
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
@@ -296,7 +288,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         Volley.newRequestQueue(this).add(jsonObjectRequest);
-
     } // pulsado ()
 
     @Override
@@ -309,6 +300,10 @@ public class MainActivity extends AppCompatActivity {
 
         // Servicio Rest
         this.elTexto = (TextView) findViewById(R.id.elTexto);
+        this.nombreSensor = (TextView) findViewById(R.id.nombre);
+        this.dioxido_carbono = (TextView) findViewById(R.id.dioxido_carbono);
+        this.sensor_id = (TextView) findViewById(R.id.id_sensor);
+
         this.elBotonEnviar = (Button) findViewById(R.id.botonEnviar);
         StrictMode.ThreadPolicy policy = new
                 StrictMode.ThreadPolicy.Builder().permitAll().build();

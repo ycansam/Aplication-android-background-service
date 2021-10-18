@@ -1,41 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-   <android.widget.LinearLayout tools:context=".MainActivity" android:layout_height="match_parent" android:layout_width="match_parent" xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto" android:orientation="vertical" xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
 
-    <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:onClick="botonArrancarServicioPulsado" android:text="Arrancar Servicio" android:id="@+id/botonBuscarDispositivosBTLE"/>
+ <Button
+     android:id="@+id/botonBuscarDispositivosBTLE"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:onClick="botonArrancarServicioPulsado"
+     android:text="Arrancar Servicio"
+     app:layout_constraintBottom_toTopOf="@+id/botonDetenerBusquedaDispositivosBTLE"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toTopOf="parent" />
 
-    <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:onClick="botonDetenerServicioPulsado" android:text="Detener Servicio" android:id="@+id/botonDetenerBusquedaDispositivosBTLE"/>
+ <Button
+     android:id="@+id/botonDetenerBusquedaDispositivosBTLE"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:onClick="botonDetenerServicioPulsado"
+     android:text="Detener Servicio"
+     app:layout_constraintBottom_toTopOf="@+id/botonBuscarDispositivosBTLEPulsado"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/botonBuscarDispositivosBTLE" />
 
-    <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:onClick="botonBuscarDispositivosBTLEPulsado" android:text="Buscar Dispositivos BTLE" android:id="@+id/botonBuscarDispositivosBTLEPulsado"/>
+ <Button
+     android:id="@+id/botonBuscarDispositivosBTLEPulsado"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:onClick="botonBuscarDispositivosBTLEPulsado"
+     android:text="Buscar Dispositivos BTLE"
+     app:layout_constraintBottom_toTopOf="@+id/botonDetenerBusquedaDispositivosBTLEPulsado"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/botonDetenerBusquedaDispositivosBTLE" />
 
-    <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:onClick="botonDetenerBusquedaDispositivosBTLEPulsado" android:text="Detener búsaqueda Dispositivos BTLE" android:id="@+id/botonDetenerBusquedaDispositivosBTLEPulsado"/>
+ <Button
+     android:id="@+id/botonDetenerBusquedaDispositivosBTLEPulsado"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:onClick="botonDetenerBusquedaDispositivosBTLEPulsado"
+     android:text="Detener búsaqueda Dispositivos BTLE"
+     app:layout_constraintBottom_toTopOf="@+id/botonBuscarNuestroDispositivoBTLE"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/botonBuscarDispositivosBTLEPulsado" />
 
-    <Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:onClick="botonBuscarNuestroDispositivoBTLEPulsado" android:text="Buscar nuestro dispositivo BTLE" android:id="@+id/botonBuscarNuestroDispositivoBTLE"/>
+ <Button
+     android:id="@+id/botonBuscarNuestroDispositivoBTLE"
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:onClick="botonBuscarNuestroDispositivoBTLEPulsado"
+     android:text="Buscar nuestro dispositivo BTLE"
+     app:layout_constraintBottom_toTopOf="@+id/botonEnviar"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/botonDetenerBusquedaDispositivosBTLEPulsado" />
 
  <Button
      android:id="@+id/botonEnviar"
-     android:onClick="boton_enviar_pulsado"
-     android:layout_width="match_parent"
+     android:layout_width="0dp"
      android:layout_height="wrap_content"
-     android:text="boton Enviar Peticionario" />
+     android:onClick="boton_enviar_pulsado"
+     android:text="Enviar Peticionario"
+     app:layout_constraintBottom_toTopOf="@+id/textView"
+     app:layout_constraintEnd_toEndOf="@+id/botonBuscarNuestroDispositivoBTLE"
+     app:layout_constraintStart_toStartOf="@+id/botonBuscarNuestroDispositivoBTLE"
+     app:layout_constraintTop_toBottomOf="@+id/botonBuscarNuestroDispositivoBTLE" />
 
  <TextView
-     android:id="@+id/elTexto"
-     android:layout_width="match_parent"
+     android:id="@+id/textView"
+     android:layout_width="0dp"
      android:layout_height="wrap_content"
-     android:text="TextView" />
+     android:text="Direccion del Sensor: "
+     app:layout_constraintBottom_toTopOf="@+id/elTexto"
+     app:layout_constraintStart_toStartOf="@+id/botonEnviar"
+     app:layout_constraintTop_toBottomOf="@+id/botonEnviar" />
+
  <TextView
      android:id="@+id/id_sensor"
-     android:layout_width="match_parent"
+     android:layout_width="0dp"
      android:layout_height="wrap_content"
-     android:text="Id Sensor" />
+     android:text="Id Sensor"
+     app:layout_constraintEnd_toEndOf="@+id/botonEnviar"
+     app:layout_constraintStart_toEndOf="@+id/textView"
+     app:layout_constraintTop_toTopOf="@+id/textView" />
+
  <TextView
      android:id="@+id/nombre"
-     android:layout_width="match_parent"
+     android:layout_width="0dp"
      android:layout_height="wrap_content"
-     android:text="nombre" />
+     android:text="nombre"
+     app:layout_constraintEnd_toEndOf="@+id/id_sensor"
+     app:layout_constraintStart_toEndOf="@+id/textView"
+     app:layout_constraintTop_toBottomOf="@+id/id_sensor" />
+
  <TextView
      android:id="@+id/dioxido_carbono"
-     android:layout_width="match_parent"
+     android:layout_width="0dp"
      android:layout_height="wrap_content"
-     android:text="Valor Dioxido" />
-</android.widget.LinearLayout>
+     android:text="Valor Dioxido"
+     app:layout_constraintEnd_toEndOf="@+id/nombre"
+     app:layout_constraintStart_toStartOf="@+id/nombre"
+     app:layout_constraintTop_toBottomOf="@+id/nombre" />
+
+ <androidx.constraintlayout.widget.ConstraintLayout
+     android:id="@+id/constraintLayout"
+     android:layout_width="0dp"
+     android:layout_height="0dp"
+     app:layout_constraintBottom_toBottomOf="parent"
+     app:layout_constraintEnd_toEndOf="parent"
+     app:layout_constraintStart_toStartOf="parent"
+     app:layout_constraintTop_toBottomOf="@+id/dioxido_carbono">
+
+  <TextView
+      android:id="@+id/elTexto"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="TextView"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent" />
+ </androidx.constraintlayout.widget.ConstraintLayout>
+
+ <TextView
+     android:id="@+id/textView2"
+     android:layout_width="0dp"
+     android:layout_height="wrap_content"
+     android:text="Nombre del Sensor:"
+     app:layout_constraintEnd_toEndOf="@+id/textView"
+     app:layout_constraintStart_toStartOf="@+id/textView"
+     app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+ <TextView
+     android:id="@+id/textView3"
+     android:layout_width="0dp"
+     android:layout_height="wrap_content"
+     android:text="Valor CO2"
+     app:layout_constraintEnd_toStartOf="@+id/dioxido_carbono"
+     app:layout_constraintStart_toStartOf="@+id/textView"
+     app:layout_constraintTop_toBottomOf="@+id/textView2" />
+</androidx.constraintlayout.widget.ConstraintLayout>
